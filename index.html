@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Giới Thiệu Bản Thân</title>
+<!-- Favicon giống icon Facebook -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231877f2'/><path d='M50 25a15 15 0 100 30 15 15 0 000-30zm0 35c-15 0-25 8-25 20v5h50v-5c0-12-10-20-25-20z' fill='white'/></svg>">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -18,6 +20,7 @@
     animation: gradientBG 15s ease infinite;
     overflow: hidden;
     padding: 20px;
+    perspective: 1000px; /* Hỗ trợ hiệu ứng 3D */
   }
 
   @keyframes gradientBG {
@@ -37,7 +40,7 @@
   .bubbles span {
     position: absolute;
     bottom: -150px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     border-radius: 50%;
     animation: rise linear infinite;
   }
@@ -45,7 +48,7 @@
     to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
   }
 
-  /* Card chính */
+  /* Card chính với hiệu ứng 3D */
   .card {
     position: relative;
     z-index: 1;
@@ -60,48 +63,56 @@
     text-align: center;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: cardIn 1s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out, box-shadow 0.3s;
   }
   @keyframes cardIn {
     from { opacity: 0; transform: translateY(40px) scale(0.95); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* Avatar */
-  .avatar-wrap {
-    position: relative;
+  /* Avatar - Icon Facebook không viền */
+  .avatar-container {
     width: 130px;
     height: 130px;
     margin: 0 auto 20px;
-  }
-  .avatar-wrap::before {
-    content: '';
-    position: absolute;
-    inset: -6px;
+    background: linear-gradient(135deg, #1877f2, #0a4fb3);
     border-radius: 50%;
-    background: conic-gradient(from 0deg, #ff00cc, #3333ff, #00ffcc, #ff00cc);
-    animation: spin 4s linear infinite;
-    z-index: -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(24, 119, 242, 0.4);
+    animation: floatAvatar 3s ease-in-out infinite;
+    position: relative;
+    transform: translateZ(30px); /* Đẩy avatar nổi lên trong không gian 3D */
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .avatar {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #1a1a2e;
-    display: block;
-    transition: transform 0.4s;
+  
+  /* Hiệu ứng lơ lửng cho Avatar */
+  @keyframes floatAvatar {
+    0%, 100% { transform: translateY(0) translateZ(30px); }
+    50% { transform: translateY(-10px) translateZ(30px); }
   }
-  .avatar:hover { transform: scale(1.05); }
 
-  /* Tên */
+  .avatar-svg {
+    width: 75px;
+    height: 75px;
+    fill: #ffffff; /* Icon màu trắng giống Facebook */
+    margin-top: 15px; /* Căn chỉnh icon vào giữa vòng tròn */
+  }
+
+  /* Tên với hiệu ứng Glow */
   h1 {
     color: #fff;
     font-size: 1.8rem;
     margin-bottom: 6px;
     letter-spacing: 0.5px;
+    animation: textGlow 3s infinite alternate;
   }
+  @keyframes textGlow {
+    from { text-shadow: 0 0 5px rgba(255,255,255,0.2), 0 0 10px rgba(255,255,255,0.1); }
+    to { text-shadow: 0 0 10px rgba(184,184,255,0.8), 0 0 20px rgba(184,184,255,0.4); }
+  }
+
   .job {
     color: #b8b8ff;
     font-size: 0.95rem;
@@ -116,7 +127,7 @@
     margin-bottom: 28px;
   }
 
-  /* Nút social */
+  /* Nút social với hiệu ứng nảy */
   .socials {
     display: flex;
     justify-content: center;
@@ -134,11 +145,11 @@
     font-size: 1.4rem;
     text-decoration: none;
     position: relative;
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
   }
   .social-btn:hover {
-    transform: translateY(-8px) scale(1.15);
+    transform: translateY(-12px) scale(1.2); /* Nảy cao hơn */
   }
   .social-btn::after {
     content: attr(data-tip);
@@ -166,10 +177,10 @@
   .zl  { background: linear-gradient(135deg, #0068ff, #00a8ff); }
   .ig  { background: linear-gradient(135deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); }
 
-  .fb:hover { box-shadow: 0 12px 30px rgba(24, 119, 242, 0.7); }
-  .tt:hover { box-shadow: 0 12px 30px rgba(254, 44, 85, 0.7); }
-  .zl:hover { box-shadow: 0 12px 30px rgba(0, 104, 255, 0.7); }
-  .ig:hover { box-shadow: 0 12px 30px rgba(214, 41, 118, 0.7); }
+  .fb:hover { box-shadow: 0 15px 35px rgba(24, 119, 242, 0.8); }
+  .tt:hover { box-shadow: 0 15px 35px rgba(254, 44, 85, 0.8); }
+  .zl:hover { box-shadow: 0 15px 35px rgba(0, 104, 255, 0.8); }
+  .ig:hover { box-shadow: 0 15px 35px rgba(214, 41, 118, 0.8); }
 
   /* Hiệu ứng fade-in tuần tự */
   .fade-item {
@@ -191,6 +202,8 @@
     .card { padding: 30px 20px; }
     h1 { font-size: 1.5rem; }
     .social-btn { width: 50px; height: 50px; font-size: 1.2rem; }
+    .avatar-container { width: 110px; height: 110px; }
+    .avatar-svg { width: 60px; height: 60px; }
   }
 </style>
 </head>
@@ -199,10 +212,13 @@
 <!-- Bong bóng nền -->
 <div class="bubbles" id="bubbles"></div>
 
-<div class="card">
-  <div class="avatar-wrap fade-item">
-    <!-- Thay URL ảnh của bạn vào đây -->
-    <img class="avatar" src="https://i.pravatar.cc/300?img=12" alt="Avatar">
+<div class="card" id="card">
+  <!-- Avatar Icon Facebook (không viền) -->
+  <div class="avatar-container fade-item">
+    <svg class="avatar-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" />
+      <path d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z" />
+    </svg>
   </div>
 
   <h1 class="fade-item">Đặng Đức Tuấn</h1>
@@ -241,6 +257,21 @@
     b.style.animationDelay = (Math.random() * 10) + 's';
     container.appendChild(b);
   }
+
+  // Hiệu ứng 3D Tilt khi di chuyển chuột
+  const card = document.getElementById('card');
+  document.addEventListener('mousemove', (e) => {
+    const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+    const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+    card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+  });
+
+  // Reset lại khi chuột rời khỏi màn hình
+  document.addEventListener('mouseleave', () => {
+    card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    card.style.transition = `transform 0.5s ease`;
+    setTimeout(() => card.style.transition = `transform 0.1s ease-out`, 500);
+  });
 </script>
 </body>
 </html>
