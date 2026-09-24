@@ -2,9 +2,8 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Đặng Đức Tuấn - Profile</title>
-<!-- Favicon icon người dùng -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231877f2'/><path d='M50 25a15 15 0 100 30 15 15 0 000-30zm0 35c-15 0-25 8-25 20v5h50v-5c0-12-10-20-25-20z' fill='white'/></svg>">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -20,13 +19,38 @@
     animation: gradientBG 15s ease infinite;
     overflow: hidden;
     padding: 20px;
-    perspective: 1000px; /* Hỗ trợ hiệu ứng 3D */
+    perspective: 1000px;
   }
 
   @keyframes gradientBG {
     0%   { background-position: 0% 50%; }
     50%  { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+  }
+
+  /* Nút bật cảm biến (chỉ hiện trên iOS) */
+  .gyro-btn {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(106, 17, 203, 0.6);
+    z-index: 999;
+    display: none;
+    animation: pulseBtn 2s infinite;
+  }
+  .gyro-btn:active { transform: translateX(-50%) scale(0.95); }
+  @keyframes pulseBtn {
+    0%, 100% { box-shadow: 0 8px 25px rgba(106, 17, 203, 0.6); }
+    50% { box-shadow: 0 8px 40px rgba(106, 17, 203, 0.9); }
   }
 
   /* Bong bóng nền */
@@ -36,6 +60,7 @@
     width: 100%; height: 100%;
     overflow: hidden;
     z-index: 0;
+    pointer-events: none;
   }
   .bubbles span {
     position: absolute;
@@ -48,7 +73,7 @@
     to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
   }
 
-  /* Card chính với hiệu ứng 3D */
+  /* Card chính */
   .card {
     position: relative;
     z-index: 1;
@@ -64,14 +89,15 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: cardIn 1s cubic-bezier(0.22, 1, 0.36, 1);
     transform-style: preserve-3d;
-    transition: transform 0.1s ease-out, box-shadow 0.3s;
+    transition: transform 0.3s ease-out, box-shadow 0.3s;
+    will-change: transform;
   }
   @keyframes cardIn {
     from { opacity: 0; transform: translateY(40px) scale(0.95); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* Avatar - Icon mặc định */
+  /* Avatar */
   .avatar-container {
     width: 130px;
     height: 130px;
@@ -84,23 +110,20 @@
     box-shadow: 0 10px 30px rgba(24, 119, 242, 0.4);
     animation: floatAvatar 3s ease-in-out infinite;
     position: relative;
-    transform: translateZ(30px); /* Đẩy avatar nổi lên trong không gian 3D */
+    transform: translateZ(30px);
   }
-  
-  /* Hiệu ứng lơ lửng cho Avatar */
   @keyframes floatAvatar {
     0%, 100% { transform: translateY(0) translateZ(30px); }
     50% { transform: translateY(-10px) translateZ(30px); }
   }
-
   .avatar-svg {
     width: 75px;
     height: 75px;
-    fill: #ffffff; /* Icon màu trắng */
-    margin-top: 15px; /* Căn chỉnh icon vào giữa vòng tròn */
+    fill: #ffffff;
+    margin-top: 15px;
   }
 
-  /* Tên với hiệu ứng Glow */
+  /* Tên */
   h1 {
     color: #fff;
     font-size: 1.8rem;
@@ -120,7 +143,7 @@
     margin-bottom: 28px;
   }
 
-  /* Nút social với hiệu ứng nảy */
+  /* Social buttons */
   .socials {
     display: flex;
     justify-content: center;
@@ -141,9 +164,7 @@
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
   }
-  .social-btn:hover {
-    transform: translateY(-12px) scale(1.2); /* Nảy cao hơn */
-  }
+  .social-btn:hover { transform: translateY(-12px) scale(1.2); }
   .social-btn::after {
     content: attr(data-tip);
     position: absolute;
@@ -165,7 +186,6 @@
     transform: translateX(-50%) translateY(0);
   }
 
-  /* ĐÃ SỬA: Zalo giờ sáng và có hiệu ứng bình thường */
   .fb  { background: linear-gradient(135deg, #1877f2, #0a4fb3); }
   .tt  { background: linear-gradient(135deg, #25f4ee, #fe2c55); }
   .zl  { background: linear-gradient(135deg, #0068ff, #00a8ff); }
@@ -176,7 +196,6 @@
   .zl:hover { box-shadow: 0 15px 35px rgba(0, 104, 255, 0.8); }
   .ig:hover { box-shadow: 0 15px 35px rgba(214, 41, 118, 0.8); }
 
-  /* Hiệu ứng fade-in tuần tự */
   .fade-item {
     opacity: 0;
     animation: fadeUp 0.8s forwards;
@@ -202,11 +221,13 @@
 </head>
 <body>
 
+<!-- Nút bật cảm biến cho iOS -->
+<button class="gyro-btn" id="gyroBtn">📱 Bật hiệu ứng nghiêng</button>
+
 <!-- Bong bóng nền -->
 <div class="bubbles" id="bubbles"></div>
 
 <div class="card" id="card">
-  <!-- Avatar Icon mặc định -->
   <div class="avatar-container fade-item">
     <svg class="avatar-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" />
@@ -218,14 +239,12 @@
   <p class="bio fade-item">Xin chào! ✨</p>
 
   <div class="socials fade-item">
-    <!-- Đã cập nhật link của bạn -->
     <a class="social-btn fb" data-tip="Facebook" href="https://www.facebook.com/anguctuan.101596/" target="_blank">
       <i class="fab fa-facebook-f"></i>
     </a>
     <a class="social-btn tt" data-tip="TikTok" href="https://www.tiktok.com/@d.ctun?_r=1&_t=ZS-99yOrqBveqe" target="_blank">
       <i class="fab fa-tiktok"></i>
     </a>
-    <!-- Zalo: Khi nào có link, bạn chỉ cần thay href="#" bằng link Zalo của bạn -->
     <a class="social-btn zl" data-tip="Zalo" href="#" target="_blank">
       <i class="fas fa-comment-dots"></i>
     </a>
@@ -236,7 +255,9 @@
 </div>
 
 <script>
-  // Tạo bong bóng nền
+  // ==========================================
+  // 1. TẠO BONG BÓNG NỀN
+  // ==========================================
   const container = document.getElementById('bubbles');
   for (let i = 0; i < 20; i++) {
     const b = document.createElement('span');
@@ -249,25 +270,121 @@
     container.appendChild(b);
   }
 
-  // Hiệu ứng 3D Tilt (nhìn theo mọi hướng chuột, kể cả đường chéo)
+  // ==========================================
+  // 2. PHÁT HIỆN THIẾT BỊ
+  // ==========================================
+  // Chỉ coi là mobile nếu có màn hình cảm ứng VÀ user agent là mobile
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  const isMobileUA = /iPhone|iPad|iPod|Android|Mobile|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent);
+  const isMobile = isTouchDevice && isMobileUA;
+
+  // ==========================================
+  // 3. HIỆU ỨNG 3D
+  // ==========================================
   const card = document.getElementById('card');
+  const gyroBtn = document.getElementById('gyroBtn');
+
+  let gyroEnabled = false;
+  let initialBeta = null;
+  let initialGamma = null;
+  let lastTouchTime = 0;
+
+  function applyTilt(rotateX, rotateY) {
+    card.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+  }
+
+  function resetTilt() {
+    card.style.transition = `transform 0.5s ease`;
+    applyTilt(0, 0);
+    setTimeout(() => card.style.transition = `transform 0.3s ease-out`, 500);
+  }
+
+  // --- A. CHUỘT (Máy tính) ---
   document.addEventListener('mousemove', (e) => {
-    // Trục X: Chuột sang phải -> thẻ nghiêng sang phải
+    // Trên máy tính: isMobile = false -> luôn chạy hiệu ứng chuột
+    // Trên điện thoại có gyro: bỏ qua để nhường cho gyro
+    if (isMobile && gyroEnabled) return;
+    
     const xAxis = (e.pageX - window.innerWidth / 2) / 25;
-    
-    // Trục Y: Chuột xuống dưới -> thẻ nghiêng xuống dưới (nhìn theo chuột)
     const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-    
-    // Áp dụng transform
-    card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+    card.style.transition = `transform 0.1s ease-out`;
+    applyTilt(yAxis, xAxis);
   });
 
-  // Reset lại khi chuột rời khỏi màn hình
   document.addEventListener('mouseleave', () => {
-    card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-    card.style.transition = `transform 0.5s ease`;
-    setTimeout(() => card.style.transition = `transform 0.1s ease-out`, 500);
+    if (isMobile && gyroEnabled) return;
+    resetTilt();
   });
+
+  // --- B. VUỐT NGÓN TAY (Điện thoại) ---
+  document.addEventListener('touchstart', () => {
+    lastTouchTime = Date.now();
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    lastTouchTime = Date.now();
+    const touch = e.touches[0];
+    const xAxis = (touch.pageX - window.innerWidth / 2) / 25;
+    const yAxis = (window.innerHeight / 2 - touch.pageY) / 25;
+    card.style.transition = `transform 0.1s ease-out`;
+    applyTilt(yAxis, xAxis);
+  }, { passive: true });
+
+  document.addEventListener('touchend', resetTilt);
+  document.addEventListener('touchcancel', resetTilt);
+
+  // --- C. GYROSCOPE (Chỉ kích hoạt trên mobile) ---
+  function handleOrientation(e) {
+    if (!gyroEnabled) return;
+    if (Date.now() - lastTouchTime < 500) return; // Đang vuốt thì bỏ qua
+
+    if (initialBeta === null) {
+      initialBeta = e.beta;
+      initialGamma = e.gamma;
+      return;
+    }
+
+    let deltaBeta = e.beta - initialBeta;
+    let deltaGamma = e.gamma - initialGamma;
+
+    deltaBeta = Math.max(-25, Math.min(25, deltaBeta));
+    deltaGamma = Math.max(-25, Math.min(25, deltaGamma));
+
+    card.style.transition = `transform 0.15s ease-out`;
+    applyTilt(deltaBeta * 0.8, deltaGamma * 0.8);
+  }
+
+  function startGyro() {
+    gyroEnabled = true;
+    initialBeta = null;
+    initialGamma = null;
+    window.addEventListener('deviceorientation', handleOrientation);
+    gyroBtn.style.display = 'none';
+  }
+
+  // CHỈ chạy logic gyro nếu là thiết bị di động
+  if (isMobile && window.DeviceOrientationEvent) {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // iOS 13+: cần người dùng bấm nút
+      gyroBtn.style.display = 'block';
+
+      gyroBtn.addEventListener('click', async () => {
+        try {
+          const permission = await DeviceOrientationEvent.requestPermission();
+          if (permission === 'granted') {
+            startGyro();
+          } else {
+            alert('Bạn cần cho phép truy cập cảm biến để dùng hiệu ứng nghiêng nhé!');
+          }
+        } catch (err) {
+          console.error('Lỗi xin quyền:', err);
+        }
+      });
+    } else {
+      // Android: tự động bật
+      startGyro();
+    }
+  }
 </script>
 </body>
 </html>
