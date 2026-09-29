@@ -559,8 +559,8 @@
     }
   }
 
-  // ==========================================
-  // 5. SOUNDCLOUD PLAYER - PHIÊN BẢN NÂNG CẤP
+    // ==========================================
+  // 5. SOUNDCLOUD PLAYER - PHIÊN BẢN TỐI ƯU
   // ==========================================
   const iframe = document.getElementById('sc-widget');
   const widget = SC.Widget(iframe);
@@ -570,11 +570,12 @@
   const playHint = document.getElementById('playHint');
 
   let widgetReady = false;
-  let isPlaying = false;      // Trạng thái thực tế (từ SoundCloud)
-  let userWantsPlay = false;  // Ý định người dùng (để autoplay)
+  let isPlaying = false;
+  let userWantsPlay = false;
+  let lastToggleTime = 0;
 
-  // Hàm cập nhật UI nhanh (optimistic update)
   function setUIPlaying(playing) {
+    isPlaying = playing;
     if (playing) {
       playIcon.className = 'fas fa-pause';
       musicPlayer.classList.add('playing');
@@ -587,107 +588,77 @@
     }
   }
 
-  // Khi SoundCloud sẵn sàng
   widget.bind(SC.Widget.Events.READY, () => {
     widgetReady = true;
     console.log('✅ SoundCloud ready');
 
-    // LỚP 1: Thử autoplay ngay
-    tryAutoPlay();
-  });
-
-  // Hàm thử phát nhạc
-  function tryAutoPlay() {
-    if (!widgetReady) return;
-    userWantsPlay = true;
-
-    // Cập nhật UI ngay lập tức
-    setUIPlaying(true);
-
-    // Gọi API phát nhạc
-    widget.play();
-
-    // Kiểm tra sau 800ms xem có phát được không
     setTimeout(() => {
       widget.isPaused((paused) => {
-        if (paused) {
-          // Autoplay bị chặn
-          setUIPlaying(false);
-          userWantsPlay = false;
-          playHint.classList.add('show');
-          console.log('⚠️ Autoplay bị chặn, chờ người dùng tương tác');
+        if (!paused) {
+          setUIPlaying(true);
+          userWantsPlay = true;
+          console.log('🎵 Autoplay OK');
         } else {
-          console.log('🎵 Đang phát nhạc');
+          playHint.classList.add('show');
+          console.log('⚠️ Autoplay bị chặn, chờ user tương tác');
         }
       });
-    }, 800);
-  }
+    }, 1200);
+  });
 
-  // LỚP 2: Phát ở lần tương tác đầu tiên
-  function handleFirstInteraction(e) {
-    // Bỏ qua nếu click vào nút play (để nút tự xử lý)
+  function onFirstInteraction(e) {
+    if (userWantsPlay || !widgetReady) return;
     if (e.target.closest('#playBtn')) return;
-    // Bỏ qua nếu click vào link social
     if (e.target.closest('.social-btn')) return;
-    // Bỏ qua nút gyro
     if (e.target.closest('#gyroBtn')) return;
 
-    if (!userWantsPlay && widgetReady) {
-      userWantsPlay = true;
-      setUIPlaying(true);
-      widget.play();
-      removeFirstInteractionListeners();
-    }
+    userWantsPlay = true;
+    setUIPlaying(true);
+    widget.play();
+    console.log('▶️ Bắt đầu phát từ lần chạm đầu tiên');
+    
+    document.removeEventListener('click', onFirstInteraction);
+    document.removeEventListener('touchstart', onFirstInteraction);
   }
 
-  function removeFirstInteractionListeners() {
-    document.removeEventListener('click', handleFirstInteraction);
-    document.removeEventListener('touchstart', handleFirstInteraction);
-  }
-
-  // Đăng ký lắng nghe tương tác đầu tiên (chỉ khi autoplay thất bại)
-  // Sẽ được kích hoạt sau khi thử autoplay
   setTimeout(() => {
-    if (!userWantsPlay) {
-      document.addEventListener('click', handleFirstInteraction);
-      document.addEventListener('touchstart', handleFirstInteraction, { passive: true });
+    if (!userWantsPlay && widgetReady) {
+      document.addEventListener('click', onFirstInteraction);
+      document.addEventListener('touchstart', onFirstInteraction, { passive: true });
+      playHint.classList.add('show');
     }
   }, 1500);
 
-  // ====== SỰ KIỆN TỪ SOUNDCLOUD ======
   widget.bind(SC.Widget.Events.PLAY, () => {
-    isPlaying = true;
-    userWantsPlay = true;
     setUIPlaying(true);
-    removeFirstInteractionListeners();
+    userWantsPlay = true;
   });
 
   widget.bind(SC.Widget.Events.PAUSE, () => {
-    isPlaying = false;
     setUIPlaying(false);
   });
 
   widget.bind(SC.Widget.Events.FINISH, () => {
-    isPlaying = false;
-    userWantsPlay = false;
     setUIPlaying(false);
+    userWantsPlay = false;
   });
 
-  // ====== NÚT PLAY/PAUSE - NHANH VÀ NHẠY ======
   function handlePlayToggle(e) {
     e.preventDefault();
     e.stopPropagation();
 
+    const now = Date.now();
+    if (now - lastToggleTime < 300) return;
+    lastToggleTime = now;
+
     if (!widgetReady) {
-      console.log('⏳ Đang tải SoundCloud, vui lòng đợi...');
+      console.log('⏳ SoundCloud chưa sẵn sàng');
       return;
     }
 
-    // OPTIMISTIC UPDATE: Đổi icon NGAY LẬP TỨC
     const willPlay = !isPlaying;
     setUIPlaying(willPlay);
 
-    // Gọi API SoundCloud
     if (willPlay) {
       userWantsPlay = true;
       widget.play();
@@ -696,23 +667,16 @@
       widget.pause();
     }
 
-    // Đồng bộ lại sau 600ms nếu cần (tránh lệch trạng thái)
-    setTimeout(() => {
-      widget.isPaused((paused) => {
-        const actualPlaying = !paused;
-        if (actualPlaying !== isPlaying) {
-          setUIPlaying(actualPlaying);
-        }
-      });
-    }, 600);
+    document.removeEventListener('click', onFirstInteraction);
+    document.removeEventListener('touchstart', onFirstInteraction);
   }
 
-  // Gắn nhiều loại sự kiện để bắt mọi trường hợp (chuột, cảm ứng, bút)
-  playBtn.addEventListener('click', handlePlayToggle);
-  playBtn.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    handlePlayToggle(e);
-  }, { passive: false });
+  if (window.PointerEvent) {
+    playBtn.addEventListener('pointerdown', handlePlayToggle);
+  } else {
+    playBtn.addEventListener('mousedown', handlePlayToggle);
+    playBtn.addEventListener('touchstart', handlePlayToggle, { passive: false });
+  }
 </script>
 </body>
 </html>
