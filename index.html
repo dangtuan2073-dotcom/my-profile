@@ -20,55 +20,79 @@
     perspective: 1000px;
   }
 
+  /* Ảnh nền */
   .bg-image {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background-image: url('background2.jpg'); 
+    background-image: url('background.jpg'); 
     background-size: cover;
     background-position: center;
     z-index: -2;
-    filter: brightness(0.6); 
+    filter: brightness(0.7); 
   }
 
   .bg-overlay {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: radial-gradient(circle, transparent 20%, rgba(15, 12, 41, 0.8) 100%);
+    background: radial-gradient(circle, transparent 20%, rgba(15, 12, 41, 0.6) 100%);
     z-index: -1;
   }
 
+  /* iframe ẩn */
   .sc-hidden {
     position: fixed;
-    left: -9999px;
-    top: -9999px;
-    width: 200px;
-    height: 200px;
-    opacity: 0;
-    pointer-events: none;
+    left: -9999px; top: -9999px;
+    width: 200px; height: 200px;
+    opacity: 0; pointer-events: none;
   }
 
+  /* ============================================
+     SVG FILTER ĐỊNH NGHĨA (Chỉ chạy ẩn)
+     ============================================ */
+  .svg-filters { position: absolute; width: 0; height: 0; }
+
+  /* ============================================
+     HIỆU ỨNG LIQUID GLASS NÂNG CAO (SVG + CSS)
+     ============================================ */
   .glass-effect {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(30px) saturate(200%);
-    -webkit-backdrop-filter: blur(30px) saturate(200%);
-    border: none; 
-    box-shadow: 
-      0 0 40px 10px rgba(255, 255, 255, 0.05),
-      0 20px 50px rgba(0, 0, 0, 0.5),
-      inset 0 0 20px rgba(255, 255, 255, 0.02);
     position: relative;
+    /* Nền kính trong suốt */
+    background: rgba(255, 255, 255, 0.05);
+    /* Áp dụng SVG Filter để tạo biến dạng và mờ */
+    backdrop-filter: url(#liquidGlassFilter) blur(8px) saturate(180%);
+    -webkit-backdrop-filter: url(#liquidGlassFilter) blur(8px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 0 20px rgba(255, 255, 255, 0.1),
+      0 15px 35px rgba(0, 0, 0, 0.4),
+      inset 0 0 20px rgba(255, 255, 255, 0.05);
+    /* Bo góc */
+    border-radius: 32px;
     overflow: hidden;
+    /* Hiệu ứng đàn hồi (Elasticity) */
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+    transform-style: preserve-3d;
   }
 
+  /* Hiệu ứng đàn hồi khi hover */
+  .glass-effect:hover {
+    transform: scale(1.02) translateZ(10px);
+    box-shadow: 
+      0 0 30px rgba(255, 255, 255, 0.2),
+      0 20px 45px rgba(0, 0, 0, 0.5),
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+
+  /* Viền sáng gradient (Soft Edge) */
   .glass-effect::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 60%);
+    padding: 1.5px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.2) 100%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -76,78 +100,73 @@
     z-index: 2;
   }
 
+  /* Vệt sáng chéo */
   .glass-effect::after {
     content: '';
     position: absolute;
     top: -50%; left: -50%;
     width: 200%; height: 200%;
-    background: linear-gradient(to bottom right, rgba(255,255,255,0) 40%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 60%);
+    background: linear-gradient(to bottom right, rgba(255,255,255,0) 40%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 60%);
     transform: rotate(30deg);
     pointer-events: none;
     z-index: 1;
+    transition: transform 0.5s;
+  }
+  .glass-effect:hover::after {
+    transform: rotate(30deg) translate(20px, 20px);
   }
 
+  /* ============================================
+     MUSIC PLAYER
+     ============================================ */
   .music-player {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 20px; right: 20px;
     display: flex;
     align-items: center;
     gap: 12px;
     border-radius: 50px;
     padding: 8px 20px 8px 8px;
     z-index: 100;
-    transition: box-shadow 0.4s;
     animation: slideInFromTop 0.8s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+  .music-player.playing {
+    box-shadow: 0 0 30px 5px rgba(106, 17, 203, 0.4), 0 15px 35px rgba(0, 0, 0, 0.4);
+    border-color: rgba(106, 17, 203, 0.6);
+  }
   @keyframes slideInFromTop {
     from { opacity: 0; transform: translateY(-30px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .music-player.playing {
-    box-shadow: 0 0 30px 5px rgba(106, 17, 203, 0.3), 0 20px 50px rgba(0, 0, 0, 0.5);
-  }
-
   .music-play-btn {
-    width: 46px;
-    height: 46px;
+    width: 46px; height: 46px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(106, 17, 203, 0.8), rgba(37, 117, 252, 0.8));
+    background: linear-gradient(135deg, rgba(106, 17, 203, 0.9), rgba(37, 117, 252, 0.9));
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
     font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.5);
-    position: relative;
-    z-index: 3;
+    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.6);
+    position: relative; z-index: 3;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    transition: transform 0.15s, box-shadow 0.2s;
   }
-  .music-play-btn:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(106, 17, 203, 0.8); }
+  .music-play-btn:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(106, 17, 203, 0.9); }
   .music-play-btn:active { transform: scale(0.9); }
   .music-play-btn i { margin-left: 3px; transition: margin 0.15s; pointer-events: none; }
   .music-player.playing .music-play-btn i { margin-left: 0; }
 
   .visualizer {
-    width: 140px;
-    height: 34px;
-    display: flex;
-    align-items: flex-end;
-    gap: 2px;
-    overflow: hidden;
-    padding: 2px 0;
-    z-index: 3;
+    width: 140px; height: 34px;
+    display: flex; align-items: flex-end; gap: 2px;
+    overflow: hidden; padding: 2px 0; z-index: 3;
   }
   .visualizer span {
-    flex: 1;
-    height: 12%;
+    flex: 1; height: 12%;
     background: linear-gradient(to top, #a855f7, #3b82f6, #00d4ff);
     border-radius: 2px;
     transition: height 0.4s ease;
@@ -158,49 +177,31 @@
   @keyframes waveUpDown { from { height: 12%; } to { height: 100%; } }
 
   .play-hint {
-    position: fixed;
-    top: 80px;
-    right: 20px;
+    position: fixed; top: 80px; right: 20px;
     background: rgba(106, 17, 203, 0.85);
     backdrop-filter: blur(10px);
-    color: #fff;
-    padding: 10px 18px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    color: #fff; padding: 10px 18px;
+    border-radius: 30px; font-size: 0.85rem; font-weight: 600;
     box-shadow: 0 8px 25px rgba(106, 17, 203, 0.6);
-    z-index: 101;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.4s, transform 0.4s;
-    pointer-events: none;
+    z-index: 101; opacity: 0; transform: translateY(-10px);
+    transition: opacity 0.4s, transform 0.4s; pointer-events: none;
   }
   .play-hint.show { opacity: 1; transform: translateY(0); }
 
   .gyro-btn {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
     padding: 12px 24px;
     background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
+    color: #fff; border: none; border-radius: 50px;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
     box-shadow: 0 8px 25px rgba(106, 17, 203, 0.6);
-    z-index: 999;
-    display: none;
-    animation: pulseBtn 2s infinite;
+    z-index: 999; display: none;
   }
   .gyro-btn:active { transform: translateX(-50%) scale(0.95); }
-  @keyframes pulseBtn {
-    0%, 100% { box-shadow: 0 8px 25px rgba(106, 17, 203, 0.6); }
-    50% { box-shadow: 0 8px 40px rgba(106, 17, 203, 0.9); }
-  }
 
+  /* ============================================
+     CARD THÔNG TIN
+     ============================================ */
   .card {
     position: relative;
     z-index: 1;
@@ -220,16 +221,13 @@
   }
 
   .avatar-container {
-    width: 130px;
-    height: 130px;
+    width: 130px; height: 130px;
     margin: 0 auto 20px;
     background: linear-gradient(135deg, #1877f2, #0a4fb3);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 30px rgba(24, 119, 242, 0.4), inset 0 0 10px rgba(255,255,255,0.5);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 30px rgba(24, 119, 242, 0.5), inset 0 0 10px rgba(255,255,255,0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     animation: floatAvatar 3s ease-in-out infinite;
     position: relative;
     transform: translateZ(30px);
@@ -239,21 +237,13 @@
     0%, 100% { transform: translateY(0) translateZ(30px); }
     50% { transform: translateY(-10px) translateZ(30px); }
   }
-  .avatar-svg {
-    width: 75px;
-    height: 75px;
-    fill: #ffffff;
-    margin-top: 15px;
-  }
+  .avatar-svg { width: 75px; height: 75px; fill: #ffffff; margin-top: 15px; }
 
   h1 {
-    color: #fff;
-    font-size: 1.8rem;
-    margin-bottom: 12px;
+    color: #fff; font-size: 1.8rem; margin-bottom: 12px;
     letter-spacing: 0.5px;
     animation: textGlow 3s infinite alternate;
-    position: relative;
-    z-index: 3;
+    position: relative; z-index: 3;
   }
   @keyframes textGlow {
     from { text-shadow: 0 0 5px rgba(255,255,255,0.2), 0 0 10px rgba(255,255,255,0.1); }
@@ -261,65 +251,42 @@
   }
 
   .bio {
-    color: #e2e8f0;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 28px;
-    position: relative;
-    z-index: 3;
+    color: #e2e8f0; font-size: 1rem; line-height: 1.6;
+    margin-bottom: 28px; position: relative; z-index: 3;
   }
 
   .socials {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 3;
+    display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+    position: relative; z-index: 3;
   }
   .social-btn {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.4rem;
-    text-decoration: none;
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.4rem; text-decoration: none;
     position: relative;
     transition: all 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     -webkit-tap-highlight-color: transparent;
   }
-
   .social-btn.active { transform: translateY(-12px) scale(1.1); }
-
   .social-btn::after {
     content: attr(data-tip);
-    position: absolute;
-    bottom: 115%;
-    left: 50%;
+    position: absolute; bottom: 115%; left: 50%;
     transform: translateX(-50%) translateY(10px);
-    background: rgba(0, 0, 0, 0.85);
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
+    background: rgba(0, 0, 0, 0.85); color: #fff;
+    padding: 5px 10px; border-radius: 6px; font-size: 0.75rem;
+    white-space: nowrap; opacity: 0; pointer-events: none;
     transition: all 0.2s;
   }
   .social-btn.active::after { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .fb.active { background: linear-gradient(135deg, rgba(24, 119, 242, 0.8), rgba(10, 79, 179, 0.8)); box-shadow: 0 15px 35px rgba(24, 119, 242, 0.6); }
-  .tt.active { background: linear-gradient(135deg, rgba(37, 244, 238, 0.8), rgba(254, 44, 85, 0.8)); box-shadow: 0 15px 35px rgba(254, 44, 85, 0.6); }
-  .zl.active { background: linear-gradient(135deg, rgba(0, 104, 255, 0.8), rgba(0, 168, 255, 0.8)); box-shadow: 0 15px 35px rgba(0, 104, 255, 0.6); }
-  .ig.active { background: linear-gradient(135deg, rgba(254, 218, 117, 0.8), rgba(214, 41, 118, 0.8)); box-shadow: 0 15px 35px rgba(214, 41, 118, 0.6); }
+  .fb.active { background: linear-gradient(135deg, #1877f2, #0a4fb3); box-shadow: 0 15px 35px rgba(24, 119, 242, 0.6); }
+  .tt.active { background: linear-gradient(135deg, #25f4ee, #fe2c55); box-shadow: 0 15px 35px rgba(254, 44, 85, 0.6); }
+  .zl.active { background: linear-gradient(135deg, #0068ff, #00a8ff); box-shadow: 0 15px 35px rgba(0, 104, 255, 0.6); }
+  .ig.active { background: linear-gradient(135deg, #feda75, #d62976, #4f5bd5); box-shadow: 0 15px 35px rgba(214, 41, 118, 0.6); }
 
   .fade-item { opacity: 0; animation: fadeUp 0.8s forwards; }
   .fade-item:nth-child(1) { animation-delay: 0.3s; }
@@ -350,6 +317,34 @@
 </head>
 <body>
 
+<!-- ============================================
+     SVG FILTERS (ẨN) - TẠO HIỆU ỨNG QUANG SAI
+     ============================================ -->
+<svg class="svg-filters">
+  <defs>
+    <filter id="liquidGlassFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <!-- 1. Làm mờ nền nhẹ -->
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+      
+      <!-- 2. Tạo độ biến dạng (Refraction) -->
+      <feDisplacementMap in="blur" in2="SourceGraphic" scale="15" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+      
+      <!-- 3. Quang sai màu (Chromatic Aberration) - Tạo viền đỏ/xanh -->
+      <feColorMatrix in="displaced" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
+      <feOffset in="red" dx="2" dy="0" result="redShifted" />
+      
+      <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green" />
+      
+      <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
+      <feOffset in="blue" dx="-2" dy="0" result="blueShifted" />
+      
+      <!-- 4. Kết hợp lại -->
+      <feBlend in="redShifted" in2="green" mode="screen" result="rg" />
+      <feBlend in="rg" in2="blueShifted" mode="screen" result="final" />
+    </filter>
+  </defs>
+</svg>
+
 <div class="bg-image"></div>
 <div class="bg-overlay"></div>
 
@@ -360,7 +355,7 @@
   </iframe>
 </div>
 
-<div class="play-hint" id="playHint"> Chạm để phát nhạc</div>
+<div class="play-hint" id="playHint">Chạm để phát nhạc</div>
 
 <div class="music-player glass-effect" id="musicPlayer">
   <button class="music-play-btn" id="playBtn" aria-label="Play/Pause">
@@ -369,7 +364,7 @@
   <div class="visualizer" id="visualizer"></div>
 </div>
 
-<button class="gyro-btn" id="gyroBtn"> Bật hiệu ứng nghiêng</button>
+<button class="gyro-btn" id="gyroBtn"> Bật hiệu ứng </button>
 
 <div class="card glass-effect" id="card">
   <div class="avatar-container fade-item">
@@ -433,7 +428,6 @@
     setTimeout(() => card.style.transition = `transform 0.3s ease-out`, 500);
   }
 
-  // Logic chuột cho máy tính
   document.addEventListener('mousemove', (e) => {
     if (isMobile && gyroEnabled) return;
     const xAxis = (e.pageX - window.innerWidth / 2) / 25;
@@ -446,10 +440,7 @@
     resetTilt();
   });
 
-  // Logic chạm tay
-  document.addEventListener('touchstart', () => {
-    lastTouchTime = Date.now();
-  }, { passive: true });
+  document.addEventListener('touchstart', () => { lastTouchTime = Date.now(); }, { passive: true });
   document.addEventListener('touchmove', (e) => {
     lastTouchTime = Date.now();
     const touch = e.touches[0];
@@ -461,44 +452,27 @@
   document.addEventListener('touchend', resetTilt);
   document.addEventListener('touchcancel', resetTilt);
 
-  // ==========================================
-  // FIX 1: CẢM BIẾN NGHIÊNG (GYROSCOPE) CHUẨN HƠN
-  // ==========================================
   function handleOrientation(e) {
     if (!gyroEnabled) return;
-    if (Date.now() - lastTouchTime < 500) return; // Đang dùng tay thì bỏ qua cảm biến
-
+    if (Date.now() - lastTouchTime < 500) return;
     if (initialBeta === null) {
-      initialBeta = e.beta;
-      initialGamma = e.gamma;
-      return;
+      initialBeta = e.beta; initialGamma = e.gamma; return;
     }
-
     let rawBeta = e.beta - initialBeta;
     let rawGamma = e.gamma - initialGamma;
-
-    // VÙNG CHẾT (Deadzone): Nếu lệch dưới 3 độ thì coi như bằng 0 (chống rung tay)
     const DEADZONE = 3;
     let deltaBeta = Math.abs(rawBeta) < DEADZONE ? 0 : rawBeta;
     let deltaGamma = Math.abs(rawGamma) < DEADZONE ? 0 : rawGamma;
-
-    // Giới hạn góc nghiêng tối đa
     deltaBeta = Math.max(-30, Math.min(30, deltaBeta));
     deltaGamma = Math.max(-30, Math.min(30, deltaGamma));
-
-    // Giảm hệ số nhân (0.5) để thẻ nghiêng từ tốn, khớp với độ nghiêng thực tế của tay
-    card.style.transition = `transform 0.2s ease-out`; // Tăng nhẹ transition để mượt hơn
+    card.style.transition = `transform 0.2s ease-out`;
     applyTilt(deltaBeta * 0.5, deltaGamma * 0.5);
   }
-
   function startGyro() {
-    gyroEnabled = true;
-    initialBeta = null;
-    initialGamma = null;
+    gyroEnabled = true; initialBeta = null; initialGamma = null;
     window.addEventListener('deviceorientation', handleOrientation);
     gyroBtn.style.display = 'none';
   }
-
   if (isMobile && window.DeviceOrientationEvent) {
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
       gyroBtn.style.display = 'block';
@@ -509,58 +483,32 @@
           else alert('Bạn cần cho phép truy cập cảm biến!');
         } catch (err) { console.error(err); }
       });
-    } else {
-      startGyro();
-    }
+    } else { startGyro(); }
   }
 
-  // ==========================================
-  // FIX 2: ICON BỊ KẸT NỔI KHI CHUYỂN TAB
-  // ==========================================
+  // ICON SOCIAL
   const socialBtns = document.querySelectorAll('.social-btn');
-  
-  // Hàm xóa trạng thái nổi của tất cả icon
-  function resetAllSocialIcons() {
-    socialBtns.forEach(btn => btn.classList.remove('active'));
-  }
+  function resetAllSocialIcons() { socialBtns.forEach(btn => btn.classList.remove('active')); }
 
   socialBtns.forEach(btn => {
-    // Cho máy tính
     btn.addEventListener('mouseenter', function() { this.classList.add('active'); });
     btn.addEventListener('mouseleave', function() { this.classList.remove('active'); });
-
-    // Cho điện thoại
     btn.addEventListener('touchstart', function() { this.classList.add('active'); }, { passive: true });
     btn.addEventListener('touchend', function() { this.classList.remove('active'); }, { passive: true });
     btn.addEventListener('touchcancel', function() { this.classList.remove('active'); }, { passive: true });
-    
-    // Khi click, lập tức xóa active để nó chìm xuống trước khi mở tab mới
     btn.addEventListener('click', function() { this.classList.remove('active'); });
   });
-
-  // Lắng nghe sự kiện ẩn/hiện tab (khi người dùng quay lại web)
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      resetAllSocialIcons();
-    }
-  });
-  
-  // Đề phòng trình duyệt không kích hoạt visibilitychange
+  document.addEventListener('visibilitychange', () => { if (document.hidden) resetAllSocialIcons(); });
   window.addEventListener('blur', resetAllSocialIcons);
 
-
-  // LOGIC SOUNDCLOUD PLAYER
+  // SOUNDCLOUD PLAYER
   const iframe = document.getElementById('sc-widget');
   const widget = SC.Widget(iframe);
   const playBtn = document.getElementById('playBtn');
   const playIcon = document.getElementById('playIcon');
   const musicPlayer = document.getElementById('musicPlayer');
   const playHint = document.getElementById('playHint');
-
-  let widgetReady = false;
-  let isPlaying = false;
-  let userWantsPlay = false;
-  let lastToggleTime = 0;
+  let widgetReady = false, isPlaying = false, userWantsPlay = false, lastToggleTime = 0;
 
   function setUIPlaying(playing) {
     isPlaying = playing;
@@ -580,12 +528,8 @@
     widgetReady = true;
     setTimeout(() => {
       widget.isPaused((paused) => {
-        if (!paused) {
-          setUIPlaying(true);
-          userWantsPlay = true;
-        } else {
-          playHint.classList.add('show');
-        }
+        if (!paused) { setUIPlaying(true); userWantsPlay = true; }
+        else { playHint.classList.add('show'); }
       });
     }, 1200);
   });
@@ -593,15 +537,10 @@
   function onFirstInteraction(e) {
     if (userWantsPlay || !widgetReady) return;
     if (e.target.closest('#playBtn') || e.target.closest('.social-btn') || e.target.closest('#gyroBtn')) return;
-
-    userWantsPlay = true;
-    setUIPlaying(true);
-    widget.play();
-    
+    userWantsPlay = true; setUIPlaying(true); widget.play();
     document.removeEventListener('click', onFirstInteraction);
     document.removeEventListener('touchstart', onFirstInteraction);
   }
-
   setTimeout(() => {
     if (!userWantsPlay && widgetReady) {
       document.addEventListener('click', onFirstInteraction);
@@ -610,42 +549,25 @@
     }
   }, 1500);
 
-  widget.bind(SC.Widget.Events.PLAY, () => {
-    setUIPlaying(true);
-    userWantsPlay = true;
-  });
-
+  widget.bind(SC.Widget.Events.PLAY, () => { setUIPlaying(true); userWantsPlay = true; });
   widget.bind(SC.Widget.Events.PAUSE, () => { setUIPlaying(false); });
   widget.bind(SC.Widget.Events.FINISH, () => { setUIPlaying(false); userWantsPlay = false; });
 
   function handlePlayToggle(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
+    e.preventDefault(); e.stopPropagation();
     const now = Date.now();
     if (now - lastToggleTime < 300) return;
     lastToggleTime = now;
-
     if (!widgetReady) return;
-
     const willPlay = !isPlaying;
     setUIPlaying(willPlay);
-
-    if (willPlay) {
-      userWantsPlay = true;
-      widget.play();
-    } else {
-      userWantsPlay = false;
-      widget.pause();
-    }
-
+    if (willPlay) { userWantsPlay = true; widget.play(); }
+    else { userWantsPlay = false; widget.pause(); }
     document.removeEventListener('click', onFirstInteraction);
     document.removeEventListener('touchstart', onFirstInteraction);
   }
-
-  if (window.PointerEvent) {
-    playBtn.addEventListener('pointerdown', handlePlayToggle);
-  } else {
+  if (window.PointerEvent) { playBtn.addEventListener('pointerdown', handlePlayToggle); }
+  else {
     playBtn.addEventListener('mousedown', handlePlayToggle);
     playBtn.addEventListener('touchstart', handlePlayToggle, { passive: false });
   }
