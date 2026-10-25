@@ -20,7 +20,6 @@
     perspective: 1000px;
   }
 
-  /* Ảnh nền toàn màn hình */
   .bg-image {
     position: fixed;
     top: 0; left: 0;
@@ -32,7 +31,6 @@
     filter: brightness(0.6); 
   }
 
-  /* Lớp phủ mờ ảo phía trên ảnh nền */
   .bg-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -41,7 +39,6 @@
     z-index: -1;
   }
 
-  /* iframe SoundCloud ẩn */
   .sc-hidden {
     position: fixed;
     left: -9999px;
@@ -52,37 +49,25 @@
     pointer-events: none;
   }
 
-  /* ============================================
-     HIỆU ỨNG LIQUID GLASS TRÀN VIỀN (SOFT EDGE)
-     ============================================ */
   .glass-effect {
-    /* Nền kính trong suốt */
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(30px) saturate(200%);
     -webkit-backdrop-filter: blur(30px) saturate(200%);
-    
-    /* XÓA BỎ BORDER CỨNG - Thay bằng bóng đổ mờ lan tỏa */
     border: none; 
-    
-    /* Tạo hiệu ứng mờ xung quanh viền (Glow tỏa ra ngoài) */
     box-shadow: 
-      0 0 40px 10px rgba(255, 255, 255, 0.05), /* Vầng sáng trắng mờ tỏa ra ngoài */
-      0 20px 50px rgba(0, 0, 0, 0.5),            /* Bóng đen tạo chiều sâu dưới đáy */
-      inset 0 0 20px rgba(255, 255, 255, 0.02);  /* Ánh sáng mờ bên trong */
-      
-    /* Tạo cảm giác viền mờ dần ở các góc (chỉ sáng ở cạnh trên) */
+      0 0 40px 10px rgba(255, 255, 255, 0.05),
+      0 20px 50px rgba(0, 0, 0, 0.5),
+      inset 0 0 20px rgba(255, 255, 255, 0.02);
     position: relative;
-    overflow: hidden; /* Giữ hiệu ứng bên trong khung */
+    overflow: hidden;
   }
 
-  /* Tạo lớp viền Gradient siêu mỏng, sáng ở trên, mờ dần ở 2 bên */
   .glass-effect::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 1px; /* Độ dày của viền ảo */
-    /* Gradient từ trắng (trên) mờ dần sang trong suốt (dưới) */
+    padding: 1px;
     background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 60%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -91,26 +76,17 @@
     z-index: 2;
   }
 
-  /* Thêm một lớp ánh sáng chéo (Reflection) giống kính thật */
   .glass-effect::after {
     content: '';
     position: absolute;
     top: -50%; left: -50%;
     width: 200%; height: 200%;
-    background: linear-gradient(
-      to bottom right,
-      rgba(255,255,255,0) 40%,
-      rgba(255,255,255,0.05) 50%,
-      rgba(255,255,255,0) 60%
-    );
+    background: linear-gradient(to bottom right, rgba(255,255,255,0) 40%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 60%);
     transform: rotate(30deg);
     pointer-events: none;
     z-index: 1;
   }
 
-  /* ============================================
-     MUSIC PLAYER
-     ============================================ */
   .music-player {
     position: fixed;
     top: 20px;
@@ -131,12 +107,9 @@
   }
 
   .music-player.playing {
-    box-shadow: 
-      0 0 30px 5px rgba(106, 17, 203, 0.3), /* Ánh sáng tím mờ khi phát nhạc */
-      0 20px 50px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 30px 5px rgba(106, 17, 203, 0.3), 0 20px 50px rgba(0, 0, 0, 0.5);
   }
 
-  /* Nút Play/Pause */
   .music-play-btn {
     width: 46px;
     height: 46px;
@@ -153,19 +126,15 @@
     flex-shrink: 0;
     box-shadow: 0 4px 15px rgba(106, 17, 203, 0.5);
     position: relative;
-    z-index: 3; /* Nằm trên lớp kính */
+    z-index: 3;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
-  .music-play-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 25px rgba(106, 17, 203, 0.8);
-  }
+  .music-play-btn:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(106, 17, 203, 0.8); }
   .music-play-btn:active { transform: scale(0.9); }
   .music-play-btn i { margin-left: 3px; transition: margin 0.15s; pointer-events: none; }
   .music-player.playing .music-play-btn i { margin-left: 0; }
 
-  /* Visualizer */
   .visualizer {
     width: 140px;
     height: 34px;
@@ -185,15 +154,9 @@
     transform-origin: bottom;
     box-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
   }
-  .visualizer.playing span {
-    animation: waveUpDown 0.7s ease-in-out infinite alternate;
-  }
-  @keyframes waveUpDown {
-    from { height: 12%; }
-    to   { height: 100%; }
-  }
+  .visualizer.playing span { animation: waveUpDown 0.7s ease-in-out infinite alternate; }
+  @keyframes waveUpDown { from { height: 12%; } to { height: 100%; } }
 
-  /* Thông báo nhắc phát nhạc */
   .play-hint {
     position: fixed;
     top: 80px;
@@ -214,7 +177,6 @@
   }
   .play-hint.show { opacity: 1; transform: translateY(0); }
 
-  /* Nút bật cảm biến (iOS) */
   .gyro-btn {
     position: fixed;
     bottom: 25px;
@@ -239,9 +201,6 @@
     50% { box-shadow: 0 8px 40px rgba(106, 17, 203, 0.9); }
   }
 
-  /* ============================================
-     CARD THÔNG TIN
-     ============================================ */
   .card {
     position: relative;
     z-index: 1;
@@ -260,7 +219,6 @@
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* Avatar */
   .avatar-container {
     width: 130px;
     height: 130px;
@@ -288,7 +246,6 @@
     margin-top: 15px;
   }
 
-  /* Tên */
   h1 {
     color: #fff;
     font-size: 1.8rem;
@@ -312,7 +269,6 @@
     z-index: 3;
   }
 
-  /* Social buttons */
   .socials {
     display: flex;
     justify-content: center;
@@ -332,13 +288,16 @@
     font-size: 1.4rem;
     text-decoration: none;
     position: relative;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    -webkit-tap-highlight-color: transparent;
   }
-  .social-btn:hover { transform: translateY(-12px) scale(1.1); }
+
+  .social-btn.active { transform: translateY(-12px) scale(1.1); }
+
   .social-btn::after {
     content: attr(data-tip);
     position: absolute;
@@ -353,28 +312,21 @@
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s;
+    transition: all 0.2s;
   }
-  .social-btn:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .social-btn.active::after { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .fb:hover { background: linear-gradient(135deg, rgba(24, 119, 242, 0.8), rgba(10, 79, 179, 0.8)); box-shadow: 0 15px 35px rgba(24, 119, 242, 0.6); }
-  .tt:hover { background: linear-gradient(135deg, rgba(37, 244, 238, 0.8), rgba(254, 44, 85, 0.8)); box-shadow: 0 15px 35px rgba(254, 44, 85, 0.6); }
-  .zl:hover { background: linear-gradient(135deg, rgba(0, 104, 255, 0.8), rgba(0, 168, 255, 0.8)); box-shadow: 0 15px 35px rgba(0, 104, 255, 0.6); }
-  .ig:hover { background: linear-gradient(135deg, rgba(254, 218, 117, 0.8), rgba(214, 41, 118, 0.8)); box-shadow: 0 15px 35px rgba(214, 41, 118, 0.6); }
+  .fb.active { background: linear-gradient(135deg, rgba(24, 119, 242, 0.8), rgba(10, 79, 179, 0.8)); box-shadow: 0 15px 35px rgba(24, 119, 242, 0.6); }
+  .tt.active { background: linear-gradient(135deg, rgba(37, 244, 238, 0.8), rgba(254, 44, 85, 0.8)); box-shadow: 0 15px 35px rgba(254, 44, 85, 0.6); }
+  .zl.active { background: linear-gradient(135deg, rgba(0, 104, 255, 0.8), rgba(0, 168, 255, 0.8)); box-shadow: 0 15px 35px rgba(0, 104, 255, 0.6); }
+  .ig.active { background: linear-gradient(135deg, rgba(254, 218, 117, 0.8), rgba(214, 41, 118, 0.8)); box-shadow: 0 15px 35px rgba(214, 41, 118, 0.6); }
 
-  .fade-item {
-    opacity: 0;
-    animation: fadeUp 0.8s forwards;
-  }
+  .fade-item { opacity: 0; animation: fadeUp 0.8s forwards; }
   .fade-item:nth-child(1) { animation-delay: 0.3s; }
   .fade-item:nth-child(2) { animation-delay: 0.5s; }
   .fade-item:nth-child(3) { animation-delay: 0.7s; }
   .fade-item:nth-child(4) { animation-delay: 0.9s; }
-
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-    from { transform: translateY(20px); }
-  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } from { transform: translateY(20px); } }
 
   @media (max-width: 768px) {
     .music-player { top: 12px; right: 12px; padding: 6px 14px 6px 6px; gap: 8px; }
@@ -449,7 +401,7 @@
 <script src="https://w.soundcloud.com/player/api.js"></script>
 
 <script>
-  // Toàn bộ phần Javascript giữ nguyên như cũ (bạn không cần sửa)
+  // TẠO VISUALIZER NHẠC
   const visualizer = document.getElementById('visualizer');
   const BAR_COUNT = 30;
   for (let i = 0; i < BAR_COUNT; i++) {
@@ -459,12 +411,14 @@
     visualizer.appendChild(bar);
   }
 
+  // HIỆU ỨNG 3D
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   const isMobileUA = /iPhone|iPad|iPod|Android|Mobile|BlackBerry|Opera Mini|IEMobile/i.test(navigator.userAgent);
   const isMobile = isTouchDevice && isMobileUA;
 
   const card = document.getElementById('card');
   const gyroBtn = document.getElementById('gyroBtn');
+  
   let gyroEnabled = false;
   let initialBeta = null;
   let initialGamma = null;
@@ -479,6 +433,7 @@
     setTimeout(() => card.style.transition = `transform 0.3s ease-out`, 500);
   }
 
+  // Logic chuột cho máy tính
   document.addEventListener('mousemove', (e) => {
     if (isMobile && gyroEnabled) return;
     const xAxis = (e.pageX - window.innerWidth / 2) / 25;
@@ -491,6 +446,7 @@
     resetTilt();
   });
 
+  // Logic chạm tay
   document.addEventListener('touchstart', () => {
     lastTouchTime = Date.now();
   }, { passive: true });
@@ -505,19 +461,36 @@
   document.addEventListener('touchend', resetTilt);
   document.addEventListener('touchcancel', resetTilt);
 
+  // ==========================================
+  // FIX 1: CẢM BIẾN NGHIÊNG (GYROSCOPE) CHUẨN HƠN
+  // ==========================================
   function handleOrientation(e) {
     if (!gyroEnabled) return;
-    if (Date.now() - lastTouchTime < 500) return;
+    if (Date.now() - lastTouchTime < 500) return; // Đang dùng tay thì bỏ qua cảm biến
+
     if (initialBeta === null) {
       initialBeta = e.beta;
       initialGamma = e.gamma;
       return;
     }
-    let dB = Math.max(-25, Math.min(25, e.beta - initialBeta));
-    let dG = Math.max(-25, Math.min(25, e.gamma - initialGamma));
-    card.style.transition = `transform 0.15s ease-out`;
-    applyTilt(dB * 0.8, dG * 0.8);
+
+    let rawBeta = e.beta - initialBeta;
+    let rawGamma = e.gamma - initialGamma;
+
+    // VÙNG CHẾT (Deadzone): Nếu lệch dưới 3 độ thì coi như bằng 0 (chống rung tay)
+    const DEADZONE = 3;
+    let deltaBeta = Math.abs(rawBeta) < DEADZONE ? 0 : rawBeta;
+    let deltaGamma = Math.abs(rawGamma) < DEADZONE ? 0 : rawGamma;
+
+    // Giới hạn góc nghiêng tối đa
+    deltaBeta = Math.max(-30, Math.min(30, deltaBeta));
+    deltaGamma = Math.max(-30, Math.min(30, deltaGamma));
+
+    // Giảm hệ số nhân (0.5) để thẻ nghiêng từ tốn, khớp với độ nghiêng thực tế của tay
+    card.style.transition = `transform 0.2s ease-out`; // Tăng nhẹ transition để mượt hơn
+    applyTilt(deltaBeta * 0.5, deltaGamma * 0.5);
   }
+
   function startGyro() {
     gyroEnabled = true;
     initialBeta = null;
@@ -525,6 +498,7 @@
     window.addEventListener('deviceorientation', handleOrientation);
     gyroBtn.style.display = 'none';
   }
+
   if (isMobile && window.DeviceOrientationEvent) {
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
       gyroBtn.style.display = 'block';
@@ -540,6 +514,42 @@
     }
   }
 
+  // ==========================================
+  // FIX 2: ICON BỊ KẸT NỔI KHI CHUYỂN TAB
+  // ==========================================
+  const socialBtns = document.querySelectorAll('.social-btn');
+  
+  // Hàm xóa trạng thái nổi của tất cả icon
+  function resetAllSocialIcons() {
+    socialBtns.forEach(btn => btn.classList.remove('active'));
+  }
+
+  socialBtns.forEach(btn => {
+    // Cho máy tính
+    btn.addEventListener('mouseenter', function() { this.classList.add('active'); });
+    btn.addEventListener('mouseleave', function() { this.classList.remove('active'); });
+
+    // Cho điện thoại
+    btn.addEventListener('touchstart', function() { this.classList.add('active'); }, { passive: true });
+    btn.addEventListener('touchend', function() { this.classList.remove('active'); }, { passive: true });
+    btn.addEventListener('touchcancel', function() { this.classList.remove('active'); }, { passive: true });
+    
+    // Khi click, lập tức xóa active để nó chìm xuống trước khi mở tab mới
+    btn.addEventListener('click', function() { this.classList.remove('active'); });
+  });
+
+  // Lắng nghe sự kiện ẩn/hiện tab (khi người dùng quay lại web)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      resetAllSocialIcons();
+    }
+  });
+  
+  // Đề phòng trình duyệt không kích hoạt visibilitychange
+  window.addEventListener('blur', resetAllSocialIcons);
+
+
+  // LOGIC SOUNDCLOUD PLAYER
   const iframe = document.getElementById('sc-widget');
   const widget = SC.Widget(iframe);
   const playBtn = document.getElementById('playBtn');
@@ -605,14 +615,8 @@
     userWantsPlay = true;
   });
 
-  widget.bind(SC.Widget.Events.PAUSE, () => {
-    setUIPlaying(false);
-  });
-
-  widget.bind(SC.Widget.Events.FINISH, () => {
-    setUIPlaying(false);
-    userWantsPlay = false;
-  });
+  widget.bind(SC.Widget.Events.PAUSE, () => { setUIPlaying(false); });
+  widget.bind(SC.Widget.Events.FINISH, () => { setUIPlaying(false); userWantsPlay = false; });
 
   function handlePlayToggle(e) {
     e.preventDefault();
