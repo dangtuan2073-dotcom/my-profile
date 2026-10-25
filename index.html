@@ -50,21 +50,21 @@
   }
 
   /* ============================================
-     HIỆU ỨNG LIQUID GLASS TỐI ƯU (PERFORMANCE)
+     HIỆU ỨNG LIQUID GLASS (TỐI ƯU HÓA)
      ============================================ */
   .liquid-glass {
     position: relative;
     isolation: isolate;
-    contain: layout style; /* Giới hạn repaint area - Cực kỳ quan trọng cho máy yếu */
+    contain: layout style;
     
     /* Tint nền */
     background: rgba(255, 255, 255, 0.08);
 
-    /* Frost — blur THẤP + saturate để "dày" hơn */
+    /* Frost — blur THẤP + saturate */
     backdrop-filter: blur(8px) saturate(160%);
     -webkit-backdrop-filter: blur(8px) saturate(160%);
 
-    /* Specular rim — GIẢ bằng inset shadow (tốn ~0 GPU) */
+    /* Specular rim — GIẢ bằng inset shadow */
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow:
       0 8px 24px rgba(0, 0, 0, 0.30),
@@ -74,7 +74,7 @@
       inset -1px 0 0 rgba(255, 255, 255, 0.12);
   }
 
-  /* Sheen — Vệt sáng chéo (dùng gradient tĩnh + mix-blend-mode cực nhẹ) */
+  /* Sheen — Vệt sáng chéo */
   .liquid-glass::after {
     content: "";
     position: absolute;
@@ -91,30 +91,11 @@
     mix-blend-mode: screen;
   }
 
-  /* ============================================
-     FALLBACK & RESPONSIVE CHO KÍNH
-     ============================================ */
-  /* Fallback cho trình duyệt cũ */
-  @supports not (backdrop-filter: blur(1px)) {
-    .liquid-glass {
-      background: rgba(30, 30, 40, 0.85); 
-    }
-  }
-
   /* Tự động giảm blur trên Mobile */
   @media (max-width: 768px) {
     .liquid-glass {
       backdrop-filter: blur(4px) saturate(140%);
       -webkit-backdrop-filter: blur(4px) saturate(140%);
-    }
-  }
-
-  /* Tôn trọng cài đặt giảm chuyển động của người dùng */
-  @media (prefers-reduced-motion: reduce) {
-    .liquid-glass {
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      background: rgba(30, 30, 40, 0.85);
     }
   }
 
